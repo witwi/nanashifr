@@ -1,0 +1,495 @@
+@font-face {
+    font-family: 'PunkBabe';
+    src: url('font/PUNKBABE TRIAL.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-image: url('img/Background001.png');
+    background-repeat: repeat;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+}
+
+a {
+    color: #3366cc;
+    text-decoration: underline;
+}
+
+a:visited {
+    color: #663399;
+}
+
+a:hover {
+    color: #ff6600;
+    text-decoration: none;
+}
+
+a:active {
+    color: #cc0000;
+}
+
+.en,
+.nav-link,
+.site-title,
+.footer-text span.en {
+    font-family: 'ms gothic', monospace;
+    font-size: 18px;
+}
+
+.page-wrapper {
+    width: 820px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.header-clouds {
+    width: 820px;
+    height: 140px;
+    background-image: url('img/clouds.jpg');
+    background-size: cover;
+    background-position: bottom center;
+    border-bottom: 3px solid #6fa8c7;
+    position: relative;
+    overflow: hidden;
+}
+
+.header-title {
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-family: 'PunkBabe', 'ms gothic', monospace;
+    font-size: 32px;
+    color: #fff;
+    text-shadow: 2px 2px 0 #3377aa, -1px -1px 0 #3377aa, 1px -1px 0 #3377aa, -1px 1px 0 #3377aa;
+    letter-spacing: 3px;
+}
+
+.nav-bar {
+    width: 100%;
+    background: linear-gradient(to bottom, #ddeeff, #bbccee);
+    border-top: 2px ridge #99aacc;
+    border-bottom: 2px ridge #99aacc;
+    text-align: center;
+    padding: 5px 0;
+}
+
+.nav-bar a {
+    font-family: 'ms gothic', monospace;
+    font-size: 15px;
+    color: #334477;
+    text-decoration: none;
+    padding: 2px 8px;
+}
+
+.nav-bar a:hover {
+    color: #ff6600;
+    text-decoration: underline;
+}
+
+.nav-separator {
+    color: #8899bb;
+    font-size: 14px;
+}
+
+.nav-bar a.active {
+    color: #cc3300;
+    font-weight: bold;
+}
+
+.retro-marquee {
+    background-color: #eef4ff;
+    border-top: 1px solid #bbccdd;
+    border-bottom: 1px solid #bbccdd;
+    padding: 3px 0;
+    font-size: 13px;
+    color: #556688;
+}
+
+.main-table {
+    width: 820px;
+    border-collapse: collapse;
+    background-color: #ffffffee;
+    border-left: 2px ridge #aabbcc;
+    border-right: 2px ridge #aabbcc;
+}
+
+.main-table td {
+    vertical-align: top;
+    padding: 12px;
+}
+
+.content-cell {
+    width: 570px;
+    border-right: 1px dashed #ccddee;
+}
+
+.sidebar-cell {
+    width: 230px;
+    background-color: #f5f8ff;
+}
+
+.retro-box {
+    border: 2px ridge #aabbcc;
+    background-color: #fff;
+    margin-bottom: 12px;
+    padding: 0;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-weight: 400;
+}
+
+.retro-box-title {
+    background: linear-gradient(to right, #7799cc, #aabbdd);
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 4px 10px;
+    border-bottom: 1px solid #6688aa;
+    letter-spacing: 0.5px;
+}
+
+.retro-box-content {
+    padding: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.retro-box-outset {
+    border: 3px outset #bbc8d8;
+    background-color: #fff;
+    margin-bottom: 12px;
+    padding: 0;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    font-weight: 400;
+}
+
+.retro-box-outset .retro-box-title {
+    background: linear-gradient(to right, #88aacc, #bbccdd);
+}
+
+.retro-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.retro-list li {
+    padding: 2px 0;
+    font-size: 13px;
+}
+
+.retro-list li::before {
+    content: "★ ";
+    color: #cc9933;
+    font-size: 11px;
+}
+
+.stamps-block {
+    text-align: center;
+    padding: 6px;
+}
+
+.stamps-block img {
+    margin: 3px;
+    border: 1px solid #ccc;
+    image-rendering: auto;
+}
+
+.blinkies-block {
+    text-align: center;
+    padding: 6px;
+}
+
+.blinkies-block img {
+    margin: 2px;
+    display: inline-block;
+}
+
+@keyframes blink-anim {
+
+    0%,
+    49% {
+        opacity: 1;
+    }
+
+    50%,
+    100% {
+        opacity: 0;
+    }
+}
+
+.blink {
+    animation: blink-anim 1s step-end infinite;
+}
+
+@keyframes sparkle {
+
+    0%,
+    100% {
+        opacity: 1;
+        color: #ff6699;
+    }
+
+    25% {
+        opacity: 0.7;
+        color: #ff99cc;
+    }
+
+    50% {
+        opacity: 1;
+        color: #ffcc00;
+    }
+
+    75% {
+        opacity: 0.7;
+        color: #ff6699;
+    }
+}
+
+.sparkle-text {
+    animation: sparkle 1.5s ease-in-out infinite;
+    font-weight: bold;
+}
+
+hr.retro {
+    border: none;
+    border-top: 1px dashed #aabbcc;
+    margin: 10px 0;
+}
+
+.nekobug-divider {
+    text-align: center;
+    margin: 8px 0;
+}
+
+.nekobug-divider img {
+    max-width: 200px;
+    opacity: 0.6;
+}
+
+.content-img {
+    border: 2px solid #99aabb;
+    padding: 3px;
+    background: #fff;
+    box-shadow: 2px 2px 0 #ccd5dd;
+}
+
+.content-img-small {
+    max-width: 200px;
+    height: auto;
+}
+
+.content-img-medium {
+    max-width: 350px;
+    height: auto;
+}
+
+.gallery-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 8px;
+}
+
+.gallery-table td {
+    text-align: center;
+    vertical-align: top;
+    padding: 5px;
+}
+
+.gallery-item {
+    border: 3px outset #bbccdd;
+    background-color: #f8f8ff;
+    padding: 6px;
+    display: inline-block;
+}
+
+.gallery-item img {
+    max-width: 260px;
+    max-height: 200px;
+    border: 1px solid #aab;
+    display: block;
+    margin: 0 auto 5px auto;
+}
+
+.gallery-item .caption {
+    font-size: 11px;
+    color: #667;
+    font-style: italic;
+}
+
+.footer-bar {
+    width: 820px;
+    background: linear-gradient(to bottom, #ddeeff, #c8d8ee);
+    border-top: 2px ridge #99aacc;
+    border-bottom: 2px ridge #99aacc;
+    text-align: center;
+    padding: 8px;
+    color: #556;
+    font-size: 11px;
+}
+
+.footer-bar a {
+    font-size: 11px;
+    color: #4466aa;
+}
+
+.disclaimer {
+    margin-top: 6px;
+    font-size: 10px;
+    color: #888;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.footer-blinkies {
+    margin-top: 6px;
+}
+
+.footer-blinkies img {
+    margin: 2px;
+}
+
+.contact-row {
+    padding: 4px 0;
+    font-size: 14px;
+}
+
+.contact-label {
+    font-weight: bold;
+    color: #556;
+    font-family: 'ms gothic', monospace;
+    font-size: 13px;
+}
+
+.welcome-banner {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.welcome-banner img {
+    max-width: 500px;
+    border: 2px ridge #aabbcc;
+}
+
+.mascot-float {
+    float: right;
+    margin: 0 0 10px 15px;
+}
+
+.mascot-float img {
+    max-width: 120px;
+    image-rendering: auto;
+}
+
+.counter-block {
+    text-align: center;
+    padding: 6px;
+    font-size: 11px;
+    color: #777;
+    border-top: 1px dashed #ccc;
+    margin-top: 8px;
+}
+
+.prikol-block {
+    text-align: center;
+    margin: 8px 0;
+}
+
+.prikol-block img {
+    max-width: 140px;
+    image-rendering: pixelated;
+}
+
+@media screen and (max-width: 850px) {
+
+    .page-wrapper,
+    .header-clouds,
+    .main-table,
+    .footer-bar {
+        width: 100% !important;
+        min-width: 320px;
+    }
+
+    .content-cell,
+    .sidebar-cell {
+        display: block;
+        width: 100% !important;
+        border-right: none;
+    }
+
+    .sidebar-cell {
+        border-top: 2px dashed #ccddee;
+    }
+
+    .main-table,
+    .main-table tbody,
+    .main-table tr {
+        display: block;
+        width: 100%;
+    }
+
+    .gallery-item img {
+        max-width: 90%;
+    }
+
+    .welcome-banner img {
+        max-width: 90%;
+    }
+
+    .content-img-medium {
+        max-width: 90%;
+    }
+}
+
+#welcome-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('img/backgrounddisc.gif');
+    background-repeat: repeat;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.disclaimer-box {
+    border: 3px outset #bbc8d8;
+    background-color: #fff;
+    width: 400px;
+    max-width: 90%;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.retro-button {
+    font-family: 'ms gothic', sans-serif;
+    font-size: 14px;
+    background-color: #eef4ff;
+    border: 2px outset #aabbcc;
+    padding: 4px 12px;
+    cursor: pointer;
+    font-weight: bold;
+    color: #334477;
+}
+
+.retro-button:hover {
+    background-color: #ddeeff;
+    border: 2px inset #aabbcc;
+}
+
+.retro-button:active {
+    background-color: #ccddee;
+}

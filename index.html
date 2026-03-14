@@ -1,69 +1,214 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>under construction 2000</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background-color: #ffffff;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Courier New', 'MS Sans Serif', 'Microsoft Sans Serif', 'Lucida Console', 'Monaco', 'Consolas', monospace;
-            -webkit-font-smoothing: none;  
-            font-smooth: never;           
-            image-rendering: pixelated;   
-        }
-        .old-school {
-            color: #000000;
-            font-size: 5vw;                
-            font-weight: normal;
-            text-transform: uppercase;
-            letter-spacing: 3px;             
-            text-align: center;
-            line-height: 1.3;
-            border: 3px solid #000000;       
-            padding: 15px 30px;
-            background-color: #ffffff;
-            max-width: 90%;
-            display: inline-block;
-            box-shadow: 5px 5px 0 #cccccc;  
-            text-shadow: none;
-            transition: all 0.2s ease;
-        }
-        .old-school:hover {
-            animation: rainbow 1.5s linear infinite;
-        }
-        @keyframes rainbow {
-            0% { color: #ff0000; }
-            14% { color: #ff7f00; }
-            28% { color: #ffff00; }
-            42% { color: #00ff00; }
-            57% { color: #0000ff; }
-            71% { color: #4b0082; }
-            85% { color: #8f00ff; }
-            100% { color: #ff0000; }
-        }
-        @media (max-width: 600px) {
-            .old-school {
-                font-size: 8vw;
-                padding: 10px 15px;
-                letter-spacing: 2px;
-                border-width: 2px;
-            }
-        }
-    </style>
+    <title>nanashi.space :: Главная</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@300;400;700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
-    <div class="old-school">
-        АНДЕР КАНСТРАКШН<br>КАМБЕК ЛЕЙТЕР!
+
+    <div id="welcome-overlay" style="display: none;">
+        <div class="disclaimer-box">
+            <div class="retro-box-title">Atención!</div>
+            <div class="retro-box-content" style="text-align: center;">
+                <p>Добро пожаловать на <b>nanashi.space</b>!</p>
+                <br>
+                <p>Сайт лучше всего смотреть с компьютера (разрешение 1024x768 и выше).</p>
+                <p style="font-size: 11px; color: #777;">На мобильных устройствах элементы сайта могут сломаться.</p>
+                <br>
+                <button id="close-disclaimer" class="retro-button">Я понял(а), пустите!</button>
+            </div>
+        </div>
     </div>
+
+    <div class="page-wrapper">
+
+        <div class="header-clouds">
+            <div class="header-title">nanashi space</div>
+        </div>
+
+        <div class="nav-bar">
+            <a href="index.html" class="active">Главная</a>
+            <span class="nav-separator">|</span>
+            <a href="about.html">Обо мне</a>
+            <span class="nav-separator">|</span>
+            <a href="contacts.html">Контакты</a>
+        </div>
+
+        <marquee class="retro-marquee" scrollamount="3">
+            ★ Добро пожаловать на мой сайт! ★ Приятного пребывания ★ Спасибо что зашли! ★
+        </marquee>
+
+        <table class="main-table" cellpadding="0" cellspacing="0">
+            <tr>
+                <td class="content-cell">
+
+                    <div class="welcome-banner">
+                        <img src="img/welcome.png" alt="Welcome">
+                    </div>
+
+                    <div class="retro-box">
+                        <div class="retro-box-title">Welcome!</div>
+                        <div class="retro-box-content">
+
+                            <div class="mascot-float">
+                                <img src="img/nyako.png" alt="Няко" class="content-img">
+                            </div>
+
+                            <p>
+                                Привет! Добро пожаловать на мой маленький уголок интернета!
+                                Меня зовут <b>Ккерся</b> и это мой персональный сайт.
+                            </p>
+                            <br>
+                            <p>
+                                Мне 15 лет, я люблю кошек, голубику и <span class="sparkle-text">многое другое</span>!
+                                Иногда рисую.
+                            </p>
+                            <br>
+                            <p>
+                                Этот сайт - моё личное пространство. Спасибо что посетили его.
+                            </p>
+
+                            <hr class="retro">
+
+                            <p style="font-size: 12px; color: #888;">
+                                Заходите на другие странички через меню сверху.
+                            </p>
+
+                            <div style="clear: both;"></div>
+                        </div>
+                    </div>
+
+                    <div class="retro-box-outset">
+                        <div class="retro-box-title">★ Новости сайта</div>
+                        <div class="retro-box-content">
+                            <p><b>11.03.2026</b> - Сайт (относительно) доделан. Ура! <span class="blink">NEW!</span></p>
+                            <p style="font-size:12px; color:#888;">я устал его делать (°ロ°)</p>
+                        </div>
+                    </div>
+
+                    <div class="prikol-block">
+                        <img src="img/prikol.png" alt="place him on your site immediately">
+                    </div>
+
+                </td>
+
+                <td class="sidebar-cell">
+
+                    <div class="retro-box">
+                        <div class="retro-box-title">Navigation</div>
+                        <div class="retro-box-content">
+                            <ul class="retro-list">
+                                <li><a href="index.html"><b>Главная</b></a></li>
+                                <li><a href="about.html">Обо мне</a></li>
+                                <li><a href="contacts.html">Контакты</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="retro-box">
+                        <div class="retro-box-title">About Webmaster</div>
+                        <div class="retro-box-content">
+                            <img src="img/who.png" alt="who"
+                                style="max-width: 80px; float: left; margin-right: 8px; border: 1px solid #ccc;">
+                            <span style="font-size: 12px;">
+                                parapustyakoff<br>
+                                15 лет<br>
+                                МСК+1<br>
+                                <a href="about.html">подробнее!!! →</a>
+                            </span>
+                            <div style="clear:both;"></div>
+                        </div>
+                    </div>
+
+                    <div class="retro-box">
+                        <div class="retro-box-title">Stamps</div>
+                        <div class="stamps-block">
+                            <img src="img/somestamps/d7d365f8.png" alt="stamp" width="99" height="56">
+                            <img src="img/somestamps/pastel (20).png" alt="stamp" width="99" height="56">
+                            <img src="img/somestamps/4c237e93.png" alt="stamp" width="99" height="56">
+                            <img src="img/somestamps/c94e66fa.jpg" alt="stamp" width="99" height="56">
+                        </div>
+                    </div>
+
+                    <div class="retro-box">
+                        <div class="retro-box-title">Blinkies</div>
+                        <div class="blinkies-block">
+                            <img src="img/someblinkiens/388394 (5).gif" alt="blinkie">
+                            <img src="img/someblinkiens/6111d3c7.gif" alt="blinkie">
+                            <img src="img/someblinkiens/7c33023e.gif" alt="blinkie">
+                            <img src="img/someblinkiens/a11f2934.gif" alt="blinkie">
+                            <img src="img/someblinkiens/6e883d93.gif" alt="blinkie">
+                        </div>
+                    </div>
+
+                    <div class="counter-block">
+                        <span class="en" style="font-size: 11px;">visitors:</span><br>
+                        <span id="visitor-count"
+                            style="font-family: 'ms gothic'; font-size: 20px; color: #336699;">???</span>
+                        <br><br>
+                        <img src="img/hey.gif" alt="hey" style="max-width: 40px;">
+                    </div>
+
+                </td>
+            </tr>
+        </table>
+
+        <marquee class="retro-marquee" scrollamount="2" direction="right">
+            ☆ nanashi.space ☆ не хотите что-нибудь съесть? ☆ (*^▽^*) ☆ я не думаю что это кто-нибудь читает ☆ ааааа!!! ☆
+            акула ☆ не забудьте попить воды
+        </marquee>
+
+        <div class="footer-bar">
+            <a href="index.html">Главная</a> |
+            <a href="about.html">Обо мне</a> |
+            <a href="contacts.html">Контакты</a>
+            <br>
+
+            <div class="footer-blinkies">
+                <img src="img/someblinkiens/08a541f0.gif" alt="blinkie">
+                <img src="img/someblinkiens/2af3385e.gif" alt="blinkie">
+                <img src="img/someblinkiens/cottoncandyblink (6).gif" alt="blinkie">
+            </div>
+
+            <div class="disclaimer">
+                ⚠ Сайт лучше всего смотреть на компьютере (1024x768 и выше).<br>
+                Мобильная версия может отображаться криво.<br>
+                Все права на изображения принадлежат их авторам.
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.getElementById('visitor-count').textContent =
+            String(Math.floor(Math.random() * 9000) + 1000);
+
+        const overlay = document.getElementById('welcome-overlay');
+        const closeBtn = document.getElementById('close-disclaimer');
+
+        if (!localStorage.getItem('visited')) {
+            overlay.style.display = 'flex';
+        }
+
+        function closeDisclaimer() {
+            overlay.style.display = 'none';
+            localStorage.setItem('visited', 'true');
+        }
+
+        closeBtn.addEventListener('click', closeDisclaimer);
+        overlay.addEventListener('click', function (e) {
+            if (e.target === overlay) {
+                closeDisclaimer();
+            }
+        });
+    </script>
+
 </body>
+
 </html>
