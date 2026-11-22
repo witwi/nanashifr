@@ -1,3 +1,12 @@
+const TRACKS = [
+  'assets/audio/mural_world.mp3',
+  'assets/audio/dreaming.mp3',
+  'assets/audio/monochrome_world.mp3',
+  'assets/audio/the_docks.mp3'
+];
+
+const BG_IMAGE_SRC = 'assets/hudf.webp';
+
 (function () {
   'use strict';
 
@@ -5,7 +14,15 @@
   try {
     const saved = localStorage.getItem('kkersia_lang');
     if (saved === 'ru' || saved === 'en') currentLang = saved;
-  } catch (e) {}
+  } catch (e) { }
+
+  let isMuted = false;
+  try {
+    if (sessionStorage.getItem('kkersia_muted') === '1') {
+      sessionStorage.removeItem('kkersia_muted');
+    }
+    isMuted = sessionStorage.getItem('kkersia_muted') === 'true';
+  } catch (e) { }
 
   const state = {
     nick: false,
@@ -18,6 +35,103 @@
   };
 
   const timers = {};
+  const audio = new Audio();
+  audio.loop = true;
+  audio.onerror = (err) => console.warn('Audio playback error:', err);
+
+  let lastTrackIdx = -1;
+  let fadeInterval = null;
+  let hudfPreloaded = false;
+
+  function pickTrack() {
+    if (TRACKS.length <= 1) return TRACKS[0];
+    let idx;
+    do {
+      idx = Math.floor(Math.random() * TRACKS.length);
+    } while (idx === lastTrackIdx);
+    lastTrackIdx = idx;
+    return TRACKS[idx];
+  }
+
+  function preloadHudf() {
+    if (hudfPreloaded) return;
+    hudfPreloaded = true;
+    const img = document.getElementById('bg-hudf');
+    if (!img) return;
+    img.src = BG_IMAGE_SRC;
+    img.onerror = () => {
+      if (img.src.includes('.webp')) {
+        img.src = 'assets/hudf.jpg';
+      }
+    };
+  }
+
+  function fadeInAudio() {
+    if (isMuted) return;
+    clearInterval(fadeInterval);
+    const startVol = audio.volume;
+    const targetVol = 0.45;
+    const startTime = performance.now();
+    const duration = 2000;
+
+    fadeInterval = setInterval(() => {
+      const elapsed = performance.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      audio.volume = startVol + (targetVol - startVol) * progress;
+      if (progress >= 1) {
+        clearInterval(fadeInterval);
+        fadeInterval = null;
+      }
+    }, 40);
+  }
+
+  function fadeOutAudio(onComplete) {
+    clearInterval(fadeInterval);
+    const startVol = audio.volume;
+    const startTime = performance.now();
+    const duration = 1000;
+
+    fadeInterval = setInterval(() => {
+      const elapsed = performance.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      audio.volume = Math.max(0, startVol * (1 - progress));
+      if (progress >= 1) {
+        clearInterval(fadeInterval);
+        fadeInterval = null;
+        audio.pause();
+        if (onComplete) onComplete();
+      }
+    }, 40);
+  }
+
+  function startAmbient() {
+    preloadHudf();
+    document.body.classList.add('space-active');
+    const bg = document.getElementById('bg-hudf');
+    if (bg) bg.classList.add('is-visible');
+    const layer = document.querySelector('.bg-layer');
+    if (layer) layer.classList.add('is-visible');
+
+    if (!isMuted) {
+      const nextTrack = pickTrack();
+      if (!audio.src || !audio.src.endsWith(nextTrack)) {
+        audio.src = nextTrack;
+      }
+      audio.currentTime = 0;
+      audio.volume = 0;
+      audio.play().catch(err => console.warn('Audio play error:', err));
+      fadeInAudio();
+    }
+  }
+
+  function stopAmbient() {
+    document.body.classList.remove('space-active');
+    const bg = document.getElementById('bg-hudf');
+    if (bg) bg.classList.remove('is-visible');
+    const layer = document.querySelector('.bg-layer');
+    if (layer) layer.classList.remove('is-visible');
+    fadeOutAudio();
+  }
 
   function getNode(id) {
     const c = SITE_CONTENT[currentLang];
@@ -116,6 +230,10 @@
           <button type="button" class="action-link" id="btn-expand-all">${c.ui.expandAll}</button>
           <span class="footer-sep">·</span>
           <button type="button" class="action-link" id="btn-collapse-all">${c.ui.collapse}</button>
+          <span id="mute-section" class="mute-section" style="display: none;">
+            <span class="footer-sep">·</span>
+            <button type="button" class="action-link" id="btn-mute"></button>
+          </span>
         </footer>
       </div>
     `;
@@ -132,17 +250,29 @@
       if (block) block.classList.toggle('is-expanded', on);
     }
 
+    const c = SITE_CONTENT[currentLang];
     const count = Object.values(state).filter(Boolean).length;
     const total = Object.keys(state).length;
     const countEl = document.getElementById('expanded-count');
     const totalEl = document.getElementById('total-count');
     const btnExpand = document.getElementById('btn-expand-all');
     const btnCollapse = document.getElementById('btn-collapse-all');
+    const muteSection = document.getElementById('mute-section');
+    const btnMute = document.getElementById('btn-mute');
 
     if (countEl) countEl.textContent = count;
     if (totalEl) totalEl.textContent = total;
     if (btnExpand) btnExpand.classList.toggle('is-disabled', count === total);
     if (btnCollapse) btnCollapse.classList.toggle('is-disabled', count === 0);
+
+    if (muteSection && btnMute) {
+      if (state.contacts) {
+        muteSection.style.display = 'inline-flex';
+        btnMute.textContent = isMuted ? c.ui.unmute : c.ui.mute;
+      } else {
+        muteSection.style.display = 'none';
+      }
+    }
   }
 
   function typeText(id) {
@@ -168,6 +298,7 @@
     } else {
       const block = document.querySelector(`[data-block="${id}"]`);
       if (block) block.classList.add('is-expanded');
+      if (id === 'contacts') startAmbient();
     }
     sync();
   }
@@ -185,6 +316,7 @@
       const block = document.querySelector(`[data-block="${id}"]`);
       if (block) block.classList.remove('is-expanded');
       if (id === 'hardware' && state.systems) collapse('systems');
+      if (id === 'contacts') stopAmbient();
     }
     sync();
   }
@@ -207,7 +339,7 @@
     currentLang = lang;
     try {
       localStorage.setItem('kkersia_lang', lang);
-    } catch (e) {}
+    } catch (e) { }
     Object.keys(timers).forEach(id => clearInterval(timers[id]));
     render(false);
   }
@@ -225,6 +357,12 @@
   function bind() {
     const app = document.getElementById('app');
     if (!app) return;
+
+    app.addEventListener('pointerenter', (e) => {
+      if (e.target && e.target.closest && e.target.closest('button.trigger[data-node="contacts"]')) {
+        preloadHudf();
+      }
+    }, true);
 
     app.addEventListener('click', (e) => {
       const langBtn = e.target.closest('button.lang-btn');
@@ -246,6 +384,29 @@
           const wrap = copyBtn.parentElement.querySelector(`[data-status-for="${val}"]`);
           copy(val, wrap);
         }
+        return;
+      }
+
+      const muteBtn = e.target.closest('#btn-mute');
+      if (muteBtn) {
+        isMuted = !isMuted;
+        try {
+          sessionStorage.setItem('kkersia_muted', isMuted ? 'true' : 'false');
+        } catch (err) { }
+
+        if (isMuted) {
+          fadeOutAudio();
+        } else if (state.contacts) {
+          if (!audio.src || audio.paused) {
+            const nextTrack = pickTrack();
+            if (!audio.src.endsWith(nextTrack)) audio.src = nextTrack;
+            audio.currentTime = 0;
+            audio.volume = 0;
+            audio.play().catch(err => console.warn('Audio play error:', err));
+          }
+          fadeInAudio();
+        }
+        sync();
         return;
       }
 

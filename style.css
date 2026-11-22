@@ -51,12 +51,72 @@ body {
   overflow-y: auto;
 }
 
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background-color: #000000;
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+
+body.space-active .bg-layer,
+.bg-layer.is-visible {
+  opacity: 1;
+  transition: opacity 2.2s ease;
+}
+
+.bg-hudf {
+  position: absolute;
+  width: 125vw;
+  height: 125vh;
+  top: -12.5vh;
+  left: -12.5vw;
+  object-fit: cover;
+  opacity: 0;
+  filter: contrast(1.18) brightness(0.95);
+  transition: opacity 1.2s ease;
+  animation: hudfDrift 24s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+body.space-active .bg-hudf,
+.bg-hudf.is-visible {
+  opacity: 0.52;
+  transition: opacity 2.2s ease;
+}
+
+@keyframes hudfDrift {
+  0% {
+    transform: translate3d(-4%, -3%, 0);
+  }
+  100% {
+    transform: translate3d(4%, 3%, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-hudf {
+    animation: none;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 .page-container {
+  position: relative;
+  z-index: 1;
   width: 100%;
   max-width: 620px;
   margin-left: auto;
   margin-right: auto;
   text-align: left;
+  transition: text-shadow 0.3s ease;
+}
+
+body.space-active .page-container {
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.95);
 }
 
 .no-break {
@@ -420,6 +480,12 @@ button.contact-val-btn:focus-visible {
 .footer-sep {
   color: var(--text-dim);
   opacity: 0.5;
+}
+
+.mute-section {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
 }
 
 button.action-link {
