@@ -7,6 +7,9 @@ const TRACKS = [
 
 const BG_IMAGE_SRC = 'assets/hudf.webp';
 
+const INLINE_TICK_MS = 18;
+const INLINE_CHARS_PER_TICK = 3;
+
 (function () {
   'use strict';
 
@@ -34,7 +37,7 @@ const BG_IMAGE_SRC = 'assets/hudf.webp';
     contacts: false
   };
 
-  const timers = {};
+  const inlineRafs = {};
   const audio = new Audio();
   audio.loop = true;
   audio.onerror = (err) => console.warn('Audio playback error:', err);
@@ -138,13 +141,13 @@ const BG_IMAGE_SRC = 'assets/hudf.webp';
     const map = {
       nick: c.header,
       code: c.intro.code,
-      hardware: c.intro.hardware,
-      systems: c.intro.hardware.child,
+      hardware: c.intro.hardware || null,
+      systems: c.intro.hardware ? c.intro.hardware.child : (c.intro.code.child || null),
       gaming: c.intro.gaming,
       reading: c.intro.reading,
       contacts: c.contacts
     };
-    return map[id];
+    return map[id] || null;
   }
 
   function render(animate = false) {
@@ -153,6 +156,30 @@ const BG_IMAGE_SRC = 'assets/hudf.webp';
 
     const c = SITE_CONTENT[currentLang];
     document.documentElement.lang = currentLang;
+
+    const codeTriggerHtml = c.intro.code.type === 'block'
+      ? `<button type="button" class="trigger block-trigger" data-node="${c.intro.code.id}">${c.intro.code.trigger}</button>`
+      : `<button type="button" class="trigger inline-trigger" data-node="${c.intro.code.id}">${c.intro.code.trigger}</button><span class="stretch-inline" data-slot="${c.intro.code.id}"></span>`;
+
+    const codeBlockHtml = c.intro.code.type === 'block'
+      ? `<div class="stretch-block" data-block="${c.intro.code.id}">
+              <div class="stretch-block-inner">
+                ${c.intro.code.lead}<button type="button" class="trigger inline-trigger" data-node="${c.intro.code.child.id}">${c.intro.code.child.trigger}</button><span class="stretch-inline" data-slot="${c.intro.code.child.id}"></span>${c.intro.code.tail}
+              </div>
+            </div>`
+      : '';
+
+    const thirdSlotHtml = c.intro.hardware
+      ? `<button type="button" class="trigger block-trigger" data-node="${c.intro.hardware.id}">${c.intro.hardware.trigger}</button>`
+      : '';
+
+    const hardwareBlockHtml = c.intro.hardware
+      ? `<div class="stretch-block" data-block="${c.intro.hardware.id}">
+              <div class="stretch-block-inner">
+                ${c.intro.hardware.lead}<button type="button" class="trigger inline-trigger" data-node="${c.intro.hardware.child.id}">${c.intro.hardware.child.trigger}</button><span class="stretch-inline" data-slot="${c.intro.hardware.child.id}"></span>${c.intro.hardware.tail}
+              </div>
+            </div>`
+      : '';
 
     const contactsHtml = c.contacts.items.map(item => {
       let val = item.url
@@ -187,15 +214,12 @@ const BG_IMAGE_SRC = 'assets/hudf.webp';
 
         <section class="main-content-section">
           <p class="lead-paragraph intro-line">
-            ${c.intro.lead}<button type="button" class="trigger inline-trigger" data-node="${c.intro.code.id}">${c.intro.code.trigger}</button><span class="stretch-inline" data-slot="${c.intro.code.id}"></span>${c.intro.mid1}<button type="button" class="trigger block-trigger" data-node="${c.intro.hardware.id}">${c.intro.hardware.trigger}</button>${c.intro.mid2}<span class="no-break"><button type="button" class="trigger block-trigger" data-node="${c.intro.gaming.id}">${c.intro.gaming.trigger}</button>${c.intro.punctGaming}</span>${c.intro.mid3}<span class="no-break"><button type="button" class="trigger block-trigger" data-node="${c.intro.reading.id}">${c.intro.reading.trigger}</button>${c.intro.end}</span>
+            ${c.intro.lead}${codeTriggerHtml}${c.intro.mid1}${thirdSlotHtml}${c.intro.mid2}<span class="no-break"><button type="button" class="trigger block-trigger" data-node="${c.intro.gaming.id}">${c.intro.gaming.trigger}</button>${c.intro.punctGaming}</span>${c.intro.mid3}<span class="no-break"><button type="button" class="trigger block-trigger" data-node="${c.intro.reading.id}">${c.intro.reading.trigger}</button>${c.intro.end}</span>
           </p>
 
           <div class="blocks-stack">
-            <div class="stretch-block" data-block="${c.intro.hardware.id}">
-              <div class="stretch-block-inner">
-                ${c.intro.hardware.lead}<button type="button" class="trigger inline-trigger" data-node="${c.intro.hardware.child.id}">${c.intro.hardware.child.trigger}</button><span class="stretch-inline" data-slot="${c.intro.hardware.child.id}"></span>${c.intro.hardware.tail}
-              </div>
-            </div>
+            ${codeBlockHtml}
+            ${hardwareBlockHtml}
 
             <div class="stretch-block" data-block="${c.intro.gaming.id}">
               <div class="stretch-block-inner">
@@ -238,21 +262,33 @@ const BG_IMAGE_SRC = 'assets/hudf.webp';
       </div>
     `;
 
+    for (const [id, on] of Object.entries(state)) {
+      if (on) {
+        const node = getNode(id);
+        if (node && node.type === 'inline') {
+          const slot = document.querySelector(`[data-slot="${id}"]`);
+          if (slot) {
+            const chars = Array.from(node.text);
+            slot.innerHTML = chars.map(ch => `<span class="inline-char is-visible">${escapeHtmlChar(ch)}</span>`).join('');
+          }
+        }
+      }
+    }
+
     sync();
   }
 
   function sync() {
     for (const [id, on] of Object.entries(state)) {
       document.querySelectorAll(`button.trigger[data-node="${id}"]`).forEach(b => b.classList.toggle('is-expanded', on));
-      const slot = document.querySelector(`[data-slot="${id}"]`);
-      if (slot) slot.textContent = on ? getNode(id).text : '';
       const block = document.querySelector(`[data-block="${id}"]`);
       if (block) block.classList.toggle('is-expanded', on);
     }
 
     const c = SITE_CONTENT[currentLang];
-    const count = Object.values(state).filter(Boolean).length;
-    const total = Object.keys(state).length;
+    const activeIds = Object.keys(state).filter(id => Boolean(getNode(id)));
+    const count = activeIds.filter(id => state[id]).length;
+    const total = activeIds.length;
     const countEl = document.getElementById('expanded-count');
     const totalEl = document.getElementById('total-count');
     const btnExpand = document.getElementById('btn-expand-all');
@@ -275,26 +311,54 @@ const BG_IMAGE_SRC = 'assets/hudf.webp';
     }
   }
 
-  function typeText(id) {
-    const slot = document.querySelector(`[data-slot="${id}"]`);
-    if (!slot) return;
-    clearInterval(timers[id]);
-    const str = getNode(id).text;
-    let i = 0;
-    slot.textContent = '';
-    timers[id] = setInterval(() => {
-      slot.textContent = str.slice(0, ++i);
-      if (i >= str.length) clearInterval(timers[id]);
-    }, 8.5);
+  function escapeHtmlChar(c) {
+    if (c === '&') return '&amp;';
+    if (c === '<') return '&lt;';
+    if (c === '>') return '&gt;';
+    if (c === '"') return '&quot;';
+    return c;
   }
 
   function expand(id) {
-    if (state[id]) return;
-    state[id] = true;
     const node = getNode(id);
+    if (!node || state[id]) return;
+    state[id] = true;
+    if (inlineRafs[id]) {
+      cancelAnimationFrame(inlineRafs[id]);
+      delete inlineRafs[id];
+    }
     document.querySelectorAll(`button.trigger[data-node="${id}"]`).forEach(b => b.classList.add('is-expanded'));
     if (node.type === 'inline') {
-      typeText(id);
+      const slot = document.querySelector(`[data-slot="${id}"]`);
+      if (slot) {
+        const chars = Array.from(node.text);
+        const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReduced) {
+          slot.innerHTML = chars.map(ch => `<span class="inline-char is-visible">${escapeHtmlChar(ch)}</span>`).join('');
+        } else {
+          slot.innerHTML = chars.map(ch => `<span class="inline-char">${escapeHtmlChar(ch)}</span>`).join('');
+          const spans = slot.querySelectorAll('.inline-char');
+          const total = spans.length;
+          const msPerChar = INLINE_TICK_MS / INLINE_CHARS_PER_TICK;
+          let shown = 0;
+          let startTime = null;
+
+          function printStep(now) {
+            if (startTime === null) startTime = now;
+            const elapsed = now - startTime;
+            const target = Math.min(total, INLINE_CHARS_PER_TICK + Math.floor(elapsed / msPerChar));
+            while (shown < target) {
+              spans[shown++].classList.add('is-visible');
+            }
+            if (shown < total) {
+              inlineRafs[id] = requestAnimationFrame(printStep);
+            } else {
+              delete inlineRafs[id];
+            }
+          }
+          inlineRafs[id] = requestAnimationFrame(printStep);
+        }
+      }
     } else {
       const block = document.querySelector(`[data-block="${id}"]`);
       if (block) block.classList.add('is-expanded');
@@ -304,18 +368,48 @@ const BG_IMAGE_SRC = 'assets/hudf.webp';
   }
 
   function collapse(id) {
-    if (!state[id]) return;
-    state[id] = false;
-    clearInterval(timers[id]);
     const node = getNode(id);
+    if (!node || !state[id]) return;
+    state[id] = false;
+    if (inlineRafs[id]) {
+      cancelAnimationFrame(inlineRafs[id]);
+      delete inlineRafs[id];
+    }
     document.querySelectorAll(`button.trigger[data-node="${id}"]`).forEach(b => b.classList.remove('is-expanded'));
     if (node.type === 'inline') {
       const slot = document.querySelector(`[data-slot="${id}"]`);
-      if (slot) slot.textContent = '';
+      if (slot) {
+        const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReduced) {
+          slot.innerHTML = '';
+        } else {
+          const spans = slot.querySelectorAll('.inline-char.is-visible');
+          let remaining = spans.length;
+          if (remaining === 0) {
+            slot.innerHTML = '';
+          } else {
+            const eraseBatch = Math.max(8, Math.ceil(remaining / 5));
+            function eraseStep() {
+              const count = Math.min(eraseBatch, remaining);
+              for (let i = 0; i < count; i++) {
+                remaining--;
+                spans[remaining].classList.remove('is-visible');
+              }
+              if (remaining > 0) {
+                inlineRafs[id] = requestAnimationFrame(eraseStep);
+              } else {
+                slot.innerHTML = '';
+                delete inlineRafs[id];
+              }
+            }
+            inlineRafs[id] = requestAnimationFrame(eraseStep);
+          }
+        }
+      }
     } else {
       const block = document.querySelector(`[data-block="${id}"]`);
       if (block) block.classList.remove('is-expanded');
-      if (id === 'hardware' && state.systems) collapse('systems');
+      if (node.child && state[node.child.id]) collapse(node.child.id);
       if (id === 'contacts') stopAmbient();
     }
     sync();
@@ -327,11 +421,15 @@ const BG_IMAGE_SRC = 'assets/hudf.webp';
   }
 
   function expandAll() {
-    Object.keys(state).forEach(id => expand(id));
+    Object.keys(state).forEach(id => {
+      if (getNode(id)) expand(id);
+    });
   }
 
   function collapseAll() {
-    Object.keys(state).forEach(id => collapse(id));
+    Object.keys(state).forEach(id => {
+      if (getNode(id)) collapse(id);
+    });
   }
 
   function switchLang(lang) {
@@ -339,8 +437,11 @@ const BG_IMAGE_SRC = 'assets/hudf.webp';
     currentLang = lang;
     try {
       localStorage.setItem('kkersia_lang', lang);
-    } catch (e) { }
-    Object.keys(timers).forEach(id => clearInterval(timers[id]));
+    } catch (e) {}
+    for (const id in inlineRafs) {
+      cancelAnimationFrame(inlineRafs[id]);
+      delete inlineRafs[id];
+    }
     render(false);
   }
 

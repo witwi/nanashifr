@@ -268,6 +268,21 @@ button.trigger:focus-visible {
   white-space: pre-wrap;
 }
 
+.inline-char {
+  display: inline;
+  visibility: hidden;
+}
+
+.inline-char.is-visible {
+  visibility: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inline-char {
+    visibility: visible !important;
+  }
+}
+
 .blocks-stack {
   display: flex;
   flex-direction: column;

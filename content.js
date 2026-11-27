@@ -14,7 +14,7 @@ const SITE_CONTENT = {
         id: "code",
         trigger: "code",
         type: "inline",
-        text: " — mostly backend and small utilities in C++ and C#, other languages less often"
+        text: " - mostly backend and small utilities in C++ and C#, other languages less often"
       },
       mid1: ", dig into ",
       hardware: {
@@ -56,7 +56,6 @@ const SITE_CONTENT = {
       items: [
         { label: "telegram", val: "@witwi", url: "https://t.me/witwi" },
         { label: "discord", val: "l3gki3", copy: true },
-        { label: "email", val: "weareonamissionfromgod@proton.me", copy: true, mailto: "mailto:weareonamissionfromgod@proton.me" },
         { label: "steam", val: "parapustyakoff", url: "https://steamcommunity.com/id/parapustyakoff/" },
         { label: "wikipedia", val: "KarmaKnife", url: "https://ru.wikipedia.org/wiki/%D0%A3%D1%87%D0%B0%D1%81%D1%82%D0%BD%D0%B8%D0%BA:KarmaKnife" },
         { label: "rym", val: "noburn", url: "https://rateyourmusic.com/~noburn", note: "(a few ratings, maybe more someday)" }
@@ -67,7 +66,9 @@ const SITE_CONTENT = {
       collapse: "collapse [esc]",
       copy: "[copy]",
       copied: "[copied]",
-      mailto: "[mailto]"
+      mailto: "[mailto]",
+      mute: "mute",
+      unmute: "unmute"
     }
   },
   ru: {
@@ -84,24 +85,18 @@ const SITE_CONTENT = {
       code: {
         id: "code",
         trigger: "код",
-        type: "inline",
-        text: " — в основном бэкенд и небольшие утилиты на C++ и C#, другие языки реже"
-      },
-      mid1: ", копаюсь в ",
-      hardware: {
-        id: "hardware",
-        trigger: "ПК и сетевых штуках",
         type: "block",
-        lead: "Железо, всё вокруг ПК, нетсталкинг и прочий сетевой стафф. Из ",
+        lead: "В основном бэкенд и небольшие утилиты на C++ и C#, другие языки использую реже. Из ",
         child: {
           id: "systems",
           trigger: "систем",
           type: "inline",
           text: " (Win11 · Nix · Debian 13)"
         },
-        tail: " — в основном десктоп, ну и Android."
+        tail: " — в основном десктоп."
       },
-      mid2: ", много ",
+      mid1: ", много ",
+      mid2: "",
       gaming: {
         id: "gaming",
         trigger: "играю",
@@ -127,7 +122,6 @@ const SITE_CONTENT = {
       items: [
         { label: "telegram", val: "@witwi", url: "https://t.me/witwi" },
         { label: "discord", val: "l3gki3", copy: true },
-        { label: "email", val: "weareonamissionfromgod@proton.me", copy: true, mailto: "mailto:weareonamissionfromgod@proton.me" },
         { label: "steam", val: "parapustyakoff", url: "https://steamcommunity.com/id/parapustyakoff/" },
         { label: "wikipedia", val: "KarmaKnife", url: "https://ru.wikipedia.org/wiki/%D0%A3%D1%87%D0%B0%D1%81%D1%82%D0%BD%D0%B8%D0%BA:KarmaKnife" },
         { label: "rym", val: "noburn", url: "https://rateyourmusic.com/~noburn", note: "(пара оценок, может когда-нибудь дойдут руки)" }
@@ -138,7 +132,9 @@ const SITE_CONTENT = {
       collapse: "свернуть [esc]",
       copy: "[копировать]",
       copied: "[скопировано]",
-      mailto: "[написать]"
+      mailto: "[написать]",
+      mute: "тихо",
+      unmute: "звук"
     }
   }
 };
